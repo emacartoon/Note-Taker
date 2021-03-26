@@ -6,14 +6,11 @@ const PORT = process.env.PORT || 8080;
 
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
-
 // Middleware Functions
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 // Static file hosting for public directory
 app.use(express.static("public"));
-
 
 // HTML Routes
 app.get("/", function (req, res) {
@@ -26,9 +23,9 @@ app.get("/notes", function (req, res) {
 // API Routes
 app.get("/api/notes", function (req, res) {
   // Retrieve all notes and res.json them back to the front end
-  res.json(data);
+
   // Read the contents of db.json
-  fs.readFile("/db/db.json", "utf8", function (err, data) {
+  fs.readFile("./db/db.json", "utf8", function (err, data) {
     // send them to the user
     res.json(JSON.parse(data));
   });
@@ -39,42 +36,42 @@ app.post("/api/notes", function (req, res) {
   const note = {
     id: uuidv4(),
     title: req.body.title,
-    test: req.body.text,
+    text: req.body.text,
   };
 
   // Read the data from the db json
-  fs.readFile(__dirname + "/db/db.json", "utf8", function (err, data) {
+  fs.readFile("./db/db.json", "utf8", function (err, data) {
     if (err) throw err;
     // Parse out the array
-    const note = JSON.parse(data);
+    var parseData = JSON.parse(data);
     // push to the array
-    data.push(note);
-    res.json(note);
+    parseData.push(note);
     // Stringify array
-    // respond to user
+    parseData = JSON.stringify(parseData);
+    console.log("Stringified parsed data with push: ", parseData);
 
-    console.log(note);
+    fs.writeFile("./db/db.json", parseData, function (err, data) {
+      if (err) throw err;
+    });
+
+    // respond to user
   });
+  res.redirect("back");
 });
 
-app.delete("api/notes:id", function (req, res) {
+app.delete("/api/notes/:id", function (req, res) {
   // Delete a note based off id
   const { id } = req.params;
-  fs.readFile(__dirname + "/db/db.json", "utf8", function (err, note) {
+  fs.readFile("./db/db.json", "utf8", function (err, note) {
     if (err) throw err;
-    const notes = JSON.parse(note);
+    var notes = JSON.parse(note);
     const newNotes = notes.filter((note) => note.id !== id);
-    res.json(newNotes);
+    fs.writeFile("./db/db.json", JSON.stringify(newNotes), function (err, note) {
+      if (err) throw err;
+      res.send("Successfully Deleted");
+    });
   });
   // Write to file
-  fs.writeFile(
-    __dirname + "/db/db.json",
-    JSON.stringify(newNotes),
-    function (err, note) {
-      if (err) throw err;
-      res.end("Successfully Deleted");
-    }
-  );
 });
 
 app.listen(PORT, () => console.log("App listening on port " + PORT));
