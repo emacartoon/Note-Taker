@@ -33,7 +33,7 @@ Express.JS
   
   
 ## Screenshots
-![Screenshot of First Screen on Load](./Screenshot.png)
+![Screenshot of First Screen on Load](./Screenshot1.png)
 Screenshot of First Screen on Load
 
 ![Screenshot of Notes Screen](./Screenshot2.png)
