@@ -24,7 +24,7 @@
 
 ## My Usage
 
-This application is used to take notes that I can reference at a later date. I am also able to edit and delete them as they are stored in a JSON file that persists on the server until I end it.
+This application is used to create notes that I can reference at a later date. I am also able to delete them when I have finished with the note. The notes persist after a refresh and are stored in a database file that doesn't clear until I end or reboot the server.
   
 
 ## Technology Used
